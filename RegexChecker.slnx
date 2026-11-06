@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RegexChecker.App/RegexChecker.App.csproj" />
+    <Project Path="src/RegexChecker.Core/RegexChecker.Core.csproj" />
+  </Folder>
+</Solution>

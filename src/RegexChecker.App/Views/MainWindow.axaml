@@ -1,0 +1,168 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:RegexChecker.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="780" d:DesignHeight="680"
+        x:Class="RegexChecker.App.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Проверка регулярных выражений"
+        Width="780" Height="680" MinWidth="560" MinHeight="520"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="StatusNeutralBackground" Color="#0A000000" />
+                    <SolidColorBrush x:Key="StatusInfoBackground" Color="#1F4A90E2" />
+                    <SolidColorBrush x:Key="StatusInfoBorder" Color="#594A90E2" />
+                    <SolidColorBrush x:Key="StatusSuccessBackground" Color="#1F3FBF71" />
+                    <SolidColorBrush x:Key="StatusSuccessBorder" Color="#593FBF71" />
+                    <SolidColorBrush x:Key="StatusWarningBackground" Color="#1FE2A03C" />
+                    <SolidColorBrush x:Key="StatusWarningBorder" Color="#59E2A03C" />
+                    <SolidColorBrush x:Key="StatusErrorBackground" Color="#1FE05252" />
+                    <SolidColorBrush x:Key="StatusErrorBorder" Color="#59E05252" />
+                    <SolidColorBrush x:Key="HintForeground" Color="#99000000" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="StatusNeutralBackground" Color="#14FFFFFF" />
+                    <SolidColorBrush x:Key="StatusInfoBackground" Color="#334A90E2" />
+                    <SolidColorBrush x:Key="StatusInfoBorder" Color="#664A90E2" />
+                    <SolidColorBrush x:Key="StatusSuccessBackground" Color="#333FBF71" />
+                    <SolidColorBrush x:Key="StatusSuccessBorder" Color="#663FBF71" />
+                    <SolidColorBrush x:Key="StatusWarningBackground" Color="#33E2A03C" />
+                    <SolidColorBrush x:Key="StatusWarningBorder" Color="#66E2A03C" />
+                    <SolidColorBrush x:Key="StatusErrorBackground" Color="#33E05252" />
+                    <SolidColorBrush x:Key="StatusErrorBorder" Color="#66E05252" />
+                    <SolidColorBrush x:Key="HintForeground" Color="#99FFFFFF" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.Styles>
+        <Style Selector="TextBlock.field-label">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,8,0,4" />
+        </Style>
+
+        <Style Selector="TextBlock.hint">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource HintForeground}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="TextBlock.status">
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="Border.status">
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="12,9" />
+            <Setter Property="Background" Value="{DynamicResource StatusNeutralBackground}" />
+        </Style>
+
+        <Style Selector="Border.status.info">
+            <Setter Property="Background" Value="{DynamicResource StatusInfoBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StatusInfoBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style Selector="Border.status.success">
+            <Setter Property="Background" Value="{DynamicResource StatusSuccessBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StatusSuccessBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style Selector="Border.status.warning">
+            <Setter Property="Background" Value="{DynamicResource StatusWarningBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StatusWarningBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style Selector="Border.status.error">
+            <Setter Property="Background" Value="{DynamicResource StatusErrorBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StatusErrorBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+    </Window.Styles>
+
+    <Grid Margin="16,12" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+
+        <TextBlock Grid.Row="0" Classes="field-label" Text="Регулярное выражение" />
+        <TextBox Grid.Row="1" Name="ExpressionBox"
+                 Text="{Binding ExpressionInput, Mode=TwoWay}"
+                 CaretIndex="{Binding ErrorPosition, Mode=TwoWay}"
+                 PlaceholderText="Например: \d{3}-\d{3} или ^abc$" />
+
+        <TextBlock Grid.Row="2" Classes="field-label" Text="Строка (текст) для проверки" />
+        <TextBox Grid.Row="3" Name="TextInputBox"
+                 Text="{Binding TextInput, Mode=TwoWay}"
+                 AcceptsReturn="True" AcceptsTab="True"
+                 TextWrapping="Wrap" MinHeight="130"
+                 PlaceholderText="Введите текст, в котором нужно найти выражение…" />
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8" Margin="0,12,0,0">
+            <Button Content="Проверить"
+                    Command="{Binding CheckCommand}"
+                    Classes="accent"
+                    MinWidth="110" />
+            <Button Content="Очистить" Command="{Binding ClearCommand}" />
+            <Button Content="◀" Command="{Binding PrevMatchCommand}"
+                    IsEnabled="{Binding HasMatches}"
+                    ToolTip.Tip="Предыдущее вхождение" />
+            <Button Content="▶" Command="{Binding NextMatchCommand}"
+                    IsEnabled="{Binding HasMatches}"
+                    ToolTip.Tip="Следующее вхождение" />
+            <TextBlock Text="{Binding MatchSummary}"
+                       IsVisible="{Binding HasMatches}"
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0" />
+        </StackPanel>
+
+        <Border Grid.Row="5" Classes="status"
+                Classes.info="{Binding IsInfo}"
+                Classes.success="{Binding IsSuccess}"
+                Classes.warning="{Binding IsWarning}"
+                Classes.error="{Binding IsError}"
+                Margin="0,12,0,0">
+            <TextBlock Classes="status"
+                       Text="{Binding StatusMessage}" />
+        </Border>
+
+        <TextBlock Grid.Row="6" Classes="field-label"
+                   Text="Результат — найденные вхождения выделены" />
+        <TextBox Grid.Row="7" Name="ResultBox"
+                 Text="{Binding ResultText, Mode=TwoWay}"
+                 IsReadOnly="True"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 MinHeight="110"
+                 SelectionBrush="#A0FFC107"
+                 SelectionForegroundBrush="#000000"
+                 SelectionStart="{Binding SelectionStart, Mode=TwoWay}"
+                 SelectionEnd="{Binding SelectionEnd, Mode=TwoWay}"
+                 PlaceholderText="Здесь появится текст с подсвеченными вхождениями" />
+
+        <Expander Grid.Row="8" Margin="0,12,0,0" Header="Поддерживаемый синтаксис">
+            <StackPanel Spacing="3" Margin="0,6,0,0">
+                <TextBlock Classes="hint" Text="Литералы: abc · экранирование: \n \t \\ \. \+ \* \( \) \[ \] \{ \} \| \^ \$" />
+                <TextBlock Classes="hint" Text="Точка . — любой символ, кроме перевода строки" />
+                <TextBlock Classes="hint" Text="Классы: [abc] [a-z] [^0-9] · предопределённые: \d \D \w \W \s \S" />
+                <TextBlock Classes="hint" Text="Кванторы: * + ? {n} {n,} {n,m} · ленивые: *? +? ?? {n,m}?" />
+                <TextBlock Classes="hint" Text="Якоря: ^ — начало строки, $ — конец строки" />
+                <TextBlock Classes="hint" Text="Группы: (…) (?:…) · альтернатива: a|b" />
+                <TextBlock Classes="hint" Text="Не поддерживаются: \b, обратные ссылки \1, проверки (?=…) (?&lt;=…), именованные группы" />
+            </StackPanel>
+        </Expander>
+
+        <TextBlock Grid.Row="9" Classes="hint" Margin="0,10,0,0"
+                   Text="Проверка выполняется собственным парсером и движком сопоставления — без System.Text.RegularExpressions." />
+    </Grid>
+</Window>
